@@ -15,6 +15,7 @@ ENVIRONMENT = "production"
 # wrangler secret put MONGO_DATA_API_KEY
 
 [[d1_databases]]
-binding = "luna_db"
+binding = "DB"
 database_name = "luna-db"
 database_id = "c6731d99-7e78-44a7-98d1-94fd55fe2ffd"
+

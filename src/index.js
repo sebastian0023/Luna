@@ -9,6 +9,30 @@ router.get('/api/health', () => {
   });
 });
 
+// Test endpoint - para debuggear
+router.get('/api/test', async (request, env) => {
+  try {
+    if (!env.DB) {
+      return new Response(JSON.stringify({ error: 'DB binding not available' }), {
+        headers: { 'Content-Type': 'application/json' }, status: 500
+      });
+    }
+
+    // Intentar insertar un test
+    const result = await env.DB.prepare(
+      'INSERT INTO confessions (author, message) VALUES (?, ?) RETURNING *'
+    ).bind('TestApp', 'Mensaje desde app').first();
+
+    return new Response(JSON.stringify({ success: true, data: result }), {
+      headers: { 'Content-Type': 'application/json' }
+    });
+  } catch (error) {
+    return new Response(JSON.stringify({ error: error.message || error.toString() }), {
+      headers: { 'Content-Type': 'application/json' }, status: 500
+    });
+  }
+});
+
 // GET /api/confessions
 router.get('/api/confessions', async (request, env) => {
   try {
