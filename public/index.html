@@ -550,9 +550,9 @@
                 document.getElementById('nameInput').value = '';
                 msgInput.value = '';
                 msgInput.style.height = 'auto';
-                await fetchConfessions();
+                // No mostrar confesiones: await fetchConfessions();
                 // scroll to top
-                document.getElementById('feed').scrollTo({ top: 0, behavior: 'smooth' });
+                // document.getElementById('feed').scrollTo({ top: 0, behavior: 'smooth' });
             } catch {
                 showError('Error al enviar. Intenta de nuevo.');
             } finally {
