@@ -550,9 +550,9 @@
                 document.getElementById('nameInput').value = '';
                 msgInput.value = '';
                 msgInput.style.height = 'auto';
-                await fetchConfessions();
+                //await fetchConfessions();
                 // scroll to top
-                document.getElementById('feed').scrollTo({ top: 0, behavior: 'smooth' });
+                //document.getElementById('feed').scrollTo({ top: 0, behavior: 'smooth' });
             } catch {
                 showError('Error al enviar. Intenta de nuevo.');
             } finally {
@@ -647,7 +647,7 @@
             if (e.key === 'Enter' && (e.ctrlKey || e.metaKey)) submitConfession();
         });
 
-        fetchConfessions();
+        //fetchConfessions();
     </script>
 </body>
 </html>
