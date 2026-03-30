@@ -134,6 +134,7 @@ limits = {
 # ============================================
 # Configuración para wrangler tail
 #
+#
 # tail = {
 #   format = "pretty"  # o "json"
 # }
