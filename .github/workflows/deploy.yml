@@ -34,62 +34,12 @@ jobs:
       - name: Check formatting
         run: npm run build || true
 
-      # Deploy a staging (en pull requests)
-      - name: Deploy to staging
-        if: github.event_name == 'pull_request'
+      # Deploy a Cloudflare Workers
+      - name: Deploy to Cloudflare
         uses: cloudflare/wrangler-action@v3
         with:
           apiToken: ${{ secrets.CLOUDFLARE_API_TOKEN }}
           accountId: ${{ secrets.CLOUDFLARE_ACCOUNT_ID }}
-          environment: development
-          secrets: |
-            MONGO_URI
-            MONGO_DATA_API_KEY
-            API_KEY
-            SECRET_TOKEN
-        env:
-          MONGO_URI: ${{ secrets.MONGO_URI }}
-          MONGO_DATA_API_KEY: ${{ secrets.MONGO_DATA_API_KEY }}
-          API_KEY: ${{ secrets.API_KEY }}
-          SECRET_TOKEN: ${{ secrets.SECRET_TOKEN }}
-
-      # Deploy a producción (en push a main)
-      - name: Deploy to production
-        if: github.ref == 'refs/heads/main' && github.event_name == 'push'
-        uses: cloudflare/wrangler-action@v3
-        with:
-          apiToken: ${{ secrets.CLOUDFLARE_API_TOKEN }}
-          accountId: ${{ secrets.CLOUDFLARE_ACCOUNT_ID }}
-          environment: production
-          secrets: |
-            MONGO_URI
-            MONGO_DATA_API_KEY
-            API_KEY
-            SECRET_TOKEN
-        env:
-          MONGO_URI: ${{ secrets.MONGO_PROD_URI }}
-          MONGO_DATA_API_KEY: ${{ secrets.MONGO_DATA_API_KEY_PROD }}
-          API_KEY: ${{ secrets.API_KEY_PROD }}
-          SECRET_TOKEN: ${{ secrets.SECRET_TOKEN_PROD }}
-
-      # Deploy a development (en push a develop)
-      - name: Deploy to development
-        if: github.ref == 'refs/heads/develop' && github.event_name == 'push'
-        uses: cloudflare/wrangler-action@v3
-        with:
-          apiToken: ${{ secrets.CLOUDFLARE_API_TOKEN }}
-          accountId: ${{ secrets.CLOUDFLARE_ACCOUNT_ID }}
-          environment: development
-          secrets: |
-            MONGO_URI
-            MONGO_DATA_API_KEY
-            API_KEY
-            SECRET_TOKEN
-        env:
-          MONGO_URI: ${{ secrets.MONGO_URI }}
-          MONGO_DATA_API_KEY: ${{ secrets.MONGO_DATA_API_KEY }}
-          API_KEY: ${{ secrets.API_KEY }}
-          SECRET_TOKEN: ${{ secrets.SECRET_TOKEN }}
 
       # Notificar si algo falla
       - name: Deployment failed
