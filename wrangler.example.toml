@@ -1,0 +1,138 @@
+# ============================================
+# CONFIGURACIÓN DE CLOUDFLARE WORKER - LUNA
+# ============================================
+# INSTRUCCIONES:
+# 1. Renombra este archivo a wrangler.toml
+# 2. Reemplaza los valores entre [[ ]] con tus datos
+# 3. Asegúrate de que tu Account ID está correcto
+
+name = "luna"
+type = "javascript"
+main = "src/index.js"
+compatibility_date = "2024-12-16"
+
+# Habilitanode js compat para usar algunas APIs de Node
+compatibility_flags = ["nodejs_compat"]
+
+# Tu Account ID (encuentra en Cloudflare Dashboard > Workers Overview)
+account_id = "your_account_id_here"
+
+# Configurar rutas para tu dominio
+# Descomenta y personaliza según tu dominio
+# routes = [
+#   { pattern = "example.com/api/*", zone_name = "example.com" },
+#   { pattern = "*.example.com/api/*", zone_name = "example.com" }
+# ]
+
+# ============================================
+# ARCHIVOS ESTÁTICOS
+# ============================================
+# Servir archivos de la carpeta 'public/'
+[assets]
+directory = "public"
+binding = "ASSETS"
+
+# ============================================
+# ENTORNO DEVELOPMENT
+# ============================================
+[env.development]
+name = "luna-development"
+
+[env.development.vars]
+ENVIRONMENT = "development"
+DEBUG = "true"
+
+# Variables locales para desarrollo (no en secrets)
+# Puedes usar estas en wrangler dev
+# Para settings locales, crea un archivo .dev.vars
+
+# ============================================
+# ENTORNO PRODUCTION
+# ============================================
+[env.production]
+name = "luna-production"
+
+[env.production.vars]
+ENVIRONMENT = "production"
+DEBUG = "false"
+
+# Routes específicos para producción
+# [env.production.routes]
+# pattern = "example.com/*"
+# zone_name = "example.com"
+
+# ============================================
+# KV NAMESPACES (Cache/Storage)
+# ============================================
+# Crear: wrangler kv:namespace create "KV_CACHE"
+# El ID se obtiene del comando anterior
+
+[[kv_namespaces]]
+binding = "KV_CACHE"
+id = "your_kv_namespace_id"
+preview_id = "your_kv_preview_id"
+
+# Namespace para sesiones
+[[kv_namespaces]]
+binding = "SESSIONS"
+id = "your_sessions_id"
+preview_id = "your_sessions_preview_id"
+
+# ============================================
+# D1 DATABASE (SQLite)
+# ============================================
+# Crear: wrangler d1 create luna-db
+# Información se obtiene del comando anterior
+
+# [[d1_databases]]
+# binding = "DB"
+# database_name = "luna-db"
+# database_id = "your_database_id"
+
+# ============================================
+# DURABLE OBJECTS (Persistencia global)
+# ============================================
+# [[durable_objects.bindings]]
+# name = "COUNTER"
+# class_name = "Counter"
+# script_name = "luna"
+
+# ============================================
+# SECRETOS (Configurar con wrangler secret put)
+# ============================================
+# NO editarlos aquí - usar CLI:
+#
+# wrangler secret put MONGO_URI --env production
+# wrangler secret put MONGO_DATA_API_KEY --env production
+# wrangler secret put API_KEY --env production
+#
+# Ver secretos: wrangler secret list --env production
+
+# ============================================
+# OBSERVABILIDAD
+# ============================================
+[observability]
+enabled = true
+
+# ============================================
+# BUILD (si usas bundler personalizado)
+# ============================================
+# [build]
+# cwd = "."
+# command = "npm install && npm run build"
+# watch_paths = ["src/**/*.js"]
+
+# ============================================
+# LIMITS
+# ============================================
+limits = {
+  cpu_ms = 50000  # Max 50 segundos CPU
+}
+
+# ============================================
+# TAIL
+# ============================================
+# Configuración para wrangler tail
+# tail = {
+#   format = "pretty"  # o "json"
+# }

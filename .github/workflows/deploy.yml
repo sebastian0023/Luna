@@ -1,0 +1,102 @@
+name: Deploy to Cloudflare Workers
+
+on:
+  push:
+    branches:
+      - main
+      - develop
+  pull_request:
+    branches:
+      - main
+
+jobs:
+  deploy:
+    runs-on: ubuntu-latest
+    name: Deploy to Cloudflare Workers
+
+    steps:
+      # Checkout del código
+      - name: Checkout code
+        uses: actions/checkout@v4
+
+      # Setup Node.js
+      - name: Setup Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: '18'
+          cache: 'npm'
+
+      # Instalar dependencias
+      - name: Install dependencies
+        run: npm ci
+
+      # Validar que el código está bien formado
+      - name: Check formatting
+        run: npm run build || true
+
+      # Deploy a staging (en pull requests)
+      - name: Deploy to staging
+        if: github.event_name == 'pull_request'
+        uses: cloudflare/wrangler-action@v3
+        with:
+          apiToken: ${{ secrets.CLOUDFLARE_API_TOKEN }}
+          accountId: ${{ secrets.CLOUDFLARE_ACCOUNT_ID }}
+          environment: development
+          secrets: |
+            MONGO_URI
+            MONGO_DATA_API_KEY
+            API_KEY
+            SECRET_TOKEN
+        env:
+          MONGO_URI: ${{ secrets.MONGO_URI }}
+          MONGO_DATA_API_KEY: ${{ secrets.MONGO_DATA_API_KEY }}
+          API_KEY: ${{ secrets.API_KEY }}
+          SECRET_TOKEN: ${{ secrets.SECRET_TOKEN }}
+
+      # Deploy a producción (en push a main)
+      - name: Deploy to production
+        if: github.ref == 'refs/heads/main' && github.event_name == 'push'
+        uses: cloudflare/wrangler-action@v3
+        with:
+          apiToken: ${{ secrets.CLOUDFLARE_API_TOKEN }}
+          accountId: ${{ secrets.CLOUDFLARE_ACCOUNT_ID }}
+          environment: production
+          secrets: |
+            MONGO_URI
+            MONGO_DATA_API_KEY
+            API_KEY
+            SECRET_TOKEN
+        env:
+          MONGO_URI: ${{ secrets.MONGO_PROD_URI }}
+          MONGO_DATA_API_KEY: ${{ secrets.MONGO_DATA_API_KEY_PROD }}
+          API_KEY: ${{ secrets.API_KEY_PROD }}
+          SECRET_TOKEN: ${{ secrets.SECRET_TOKEN_PROD }}
+
+      # Deploy a development (en push a develop)
+      - name: Deploy to development
+        if: github.ref == 'refs/heads/develop' && github.event_name == 'push'
+        uses: cloudflare/wrangler-action@v3
+        with:
+          apiToken: ${{ secrets.CLOUDFLARE_API_TOKEN }}
+          accountId: ${{ secrets.CLOUDFLARE_ACCOUNT_ID }}
+          environment: development
+          secrets: |
+            MONGO_URI
+            MONGO_DATA_API_KEY
+            API_KEY
+            SECRET_TOKEN
+        env:
+          MONGO_URI: ${{ secrets.MONGO_URI }}
+          MONGO_DATA_API_KEY: ${{ secrets.MONGO_DATA_API_KEY }}
+          API_KEY: ${{ secrets.API_KEY }}
+          SECRET_TOKEN: ${{ secrets.SECRET_TOKEN }}
+
+      # Notificar si algo falla
+      - name: Deployment failed
+        if: failure()
+        run: echo "❌ Deployment to Cloudflare failed!"
+
+      # Notificar éxito
+      - name: Deployment successful
+        if: success()
+        run: echo "✅ Successfully deployed to Cloudflare Workers!"

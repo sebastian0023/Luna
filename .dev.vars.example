@@ -1,0 +1,8 @@
+# Variables de entorno para desarrollo local
+# Copiar a .dev.vars (no se commitea)
+# Este archivo se carga automáticamente con 'wrangler dev'
+
+MONGO_URI=mongodb+srv://user:password@cluster.mongodb.net/luna?appName=Api
+MONGO_DATA_API_KEY=your_api_key_here
+API_KEY=dev_key_12345
+SECRET_TOKEN=dev_secret_token

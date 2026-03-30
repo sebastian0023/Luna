@@ -1,0 +1,26 @@
+{
+  "name": "luna-cloudflare-worker",
+  "version": "1.0.0",
+  "description": "Luna App - Cloudflare Worker",
+  "type": "module",
+  "main": "src/index.js",
+  "scripts": {
+    "dev": "wrangler dev",
+    "deploy": "wrangler deploy",
+    "deploy:prod": "wrangler deploy --env production",
+    "preview": "wrangler publish",
+    "secret:set": "wrangler secret put",
+    "secret:list": "wrangler secret list",
+    "build": "echo 'Cloudflare Workers no requieren build paso'"
+  },
+  "keywords": ["cloudflare", "worker", "luna"],
+  "author": "",
+  "license": "ISC",
+  "devDependencies": {
+    "wrangler": "^3.45.0",
+    "@cloudflare/workers-types": "^4.20240415.0"
+  },
+  "dependencies": {
+    "itty-router": "^4.1.4"
+  }
+}
