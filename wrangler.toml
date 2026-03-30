@@ -28,8 +28,8 @@ ENVIRONMENT = "development"
 # Bindings de Workers (D1, KV, etc.)
 [[kv_namespaces]]
 binding = "KV_CACHE"
-id = ""
-preview_id = ""
+id = "f7aaab86d474fca548d8d9c1e8695390"
+preview_id = "f7aaab86d474fca548d8d9c1e8695390"
 
 # Para MongoDB, usar variables de secreto
 # Ejecutar: wrangler secret put MONGO_URI
