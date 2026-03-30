@@ -13,3 +13,8 @@ ENVIRONMENT = "production"
 # Los secretos (MONGO_URI, MONGO_DATA_API_KEY) se agregan con:
 # wrangler secret put MONGO_URI
 # wrangler secret put MONGO_DATA_API_KEY
+
+[[d1_databases]]
+binding = "luna_db"
+database_name = "luna-db"
+database_id = "c6731d99-7e78-44a7-98d1-94fd55fe2ffd"
