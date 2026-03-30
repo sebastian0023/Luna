@@ -4,10 +4,6 @@ on:
   push:
     branches:
       - main
-      - develop
-  pull_request:
-    branches:
-      - main
 
 jobs:
   deploy:
@@ -15,38 +11,28 @@ jobs:
     name: Deploy to Cloudflare Workers
 
     steps:
-      # Checkout del código
       - name: Checkout code
         uses: actions/checkout@v4
 
-      # Setup Node.js
       - name: Setup Node.js
         uses: actions/setup-node@v4
         with:
-          node-version: '18'
+          node-version: '20'
           cache: 'npm'
 
-      # Instalar dependencias
       - name: Install dependencies
         run: npm ci
 
-      # Validar que el código está bien formado
-      - name: Check formatting
-        run: npm run build || true
-
-      # Deploy a Cloudflare Workers
       - name: Deploy to Cloudflare
         uses: cloudflare/wrangler-action@v3
         with:
           apiToken: ${{ secrets.CLOUDFLARE_API_TOKEN }}
           accountId: ${{ secrets.CLOUDFLARE_ACCOUNT_ID }}
 
-      # Notificar si algo falla
-      - name: Deployment failed
-        if: failure()
-        run: echo "❌ Deployment to Cloudflare failed!"
-
-      # Notificar éxito
-      - name: Deployment successful
+      - name: Success
         if: success()
-        run: echo "✅ Successfully deployed to Cloudflare Workers!"
+        run: echo "✅ Deployed successfully!"
+
+      - name: Failed
+        if: failure()
+        run: echo "❌ Deployment failed"

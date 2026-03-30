@@ -3,33 +3,13 @@ main = "src/index.js"
 compatibility_date = "2024-12-16"
 compatibility_flags = ["nodejs_compat"]
 
-[env.production]
-name = "luna-production"
-
-[env.development]
-name = "luna-development"
-
-# Configurar las rutas
-routes = [
-  { pattern = "example.com/api/*", zone_name = "example.com" },
-  { pattern = "*.example.com/api/*", zone_name = "example.com" }
-]
-
 # Archivos estáticos
 assets = { directory = "public", binding = "ASSETS" }
 
 # Variables de entorno
-[env.production.vars]
+[vars]
 ENVIRONMENT = "production"
 
-[env.development.vars]
-ENVIRONMENT = "development"
-
-# Bindings de Workers (D1, KV, etc.)
-[[kv_namespaces]]
-binding = "KV_CACHE"
-id = ""
-preview_id = ""
-
-# Para MongoDB, usar variables de secreto
-# Ejecutar: wrangler secret put MONGO_URI
+# Los secretos (MONGO_URI, MONGO_DATA_API_KEY) se agregan con:
+# wrangler secret put MONGO_URI
+# wrangler secret put MONGO_DATA_API_KEY
